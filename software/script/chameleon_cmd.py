@@ -32,6 +32,9 @@ DATA_CMD_GET_SLOT_INFO = 1019
 
 DATA_CMD_WIPE_FDS = 1020
 
+DATA_CMD_SET_USBCDC_LOG_MODE = 1021
+DATA_CMD_GET_USBCDC_LOG_MODE = 1022
+
 DATA_CMD_SCAN_14A_TAG = 2000
 DATA_CMD_MF1_SUPPORT_DETECT = 2001
 DATA_CMD_MF1_NT_LEVEL_DETECT = 2002
@@ -518,6 +521,18 @@ class BaseChameleonCMD:
         Set animation mode value
         """
         return self.device.send_cmd_sync(DATA_CMD_SET_ANIMATION_MODE, 0x00, bytearray([value]))
+    
+    def get_settings_usbcdc_log(self):
+        """
+        Get USB CDC log mode value
+        """
+        return self.device.send_cmd_sync(DATA_CMD_GET_USBCDC_LOG_MODE, 0x00, None)
+    
+    def set_settings_usbcdc_log(self, value: int):
+        """
+        Set USB CDC log mode value
+        """
+        return self.device.send_cmd_sync(DATA_CMD_SET_USBCDC_LOG_MODE, 0x00, bytearray([value]))
     
     def reset_settings(self):
         """

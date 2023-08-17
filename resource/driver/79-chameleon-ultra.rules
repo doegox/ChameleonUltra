@@ -1,0 +1,32 @@
+# Chameleon Ultra linux udev rules
+#
+# copy this file to /etc/udev/rules.d (or add the entry to the end of an existing file)
+# if rules are not reloaded automatically on your OS, you can restart udev hotplug:
+#
+#  'sudo udevadm control --reload-rules'
+#
+# Provided rules:
+# * avoid conflict with modem-manager
+# * add group permissions and group name "dialout". You may need to adapt the group name used by your OS.
+# * create symlinks /dev/lite* or /dev/ultra*
+
+ACTION!="add|change", GOTO="chameleon_ultra_end"
+SUBSYSTEM!="tty", GOTO="chameleon_ultra_end"
+
+ATTRS{idVendor}=="6868", ATTRS{idProduct}=="8686", ATTRS{product}=="ChameleonLite*", ENV{ID_MM_DEVICE_IGNORE}="1", MODE="660", GROUP="dialout", GOTO="chameleon_lite_symlinks"
+ATTRS{idVendor}=="6868", ATTRS{idProduct}=="8686", ATTRS{product}=="ChameleonUltra*", ENV{ID_MM_DEVICE_IGNORE}="1", MODE="660", GROUP="dialout", GOTO="chameleon_ultra_symlinks"
+GOTO="chameleon_ultra_end"
+
+LABEL="chameleon_lite_symlinks"
+# we can't match idVendor/idProduct and bInterfaceNumber in the same rule as they are not from same parents
+ATTRS{bInterfaceNumber}=="00", ENV{ID_MM_DEVICE_IGNORE}="1", SYMLINK+="lite lite-%n", MODE="660", GROUP="dialout"
+ATTRS{bInterfaceNumber}=="02", ENV{ID_MM_DEVICE_IGNORE}="1", SYMLINK+="lite_log lite_log-%n", MODE="660", GROUP="dialout"
+GOTO="chameleon_ultra_end"
+
+LABEL="chameleon_ultra_symlinks"
+# we can't match idVendor/idProduct and bInterfaceNumber in the same rule as they are not from same parents
+ATTRS{bInterfaceNumber}=="00", ENV{ID_MM_DEVICE_IGNORE}="1", SYMLINK+="ultra ultra-%n", MODE="660", GROUP="dialout"
+ATTRS{bInterfaceNumber}=="02", ENV{ID_MM_DEVICE_IGNORE}="1", SYMLINK+="ultra_log ultra_log-%n", MODE="660", GROUP="dialout"
+GOTO="chameleon_ultra_end"
+
+LABEL="chameleon_ultra_end"

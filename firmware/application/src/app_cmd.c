@@ -104,7 +104,7 @@ data_frame_tx_t* cmd_processor_set_animation_mode(uint16_t cmd, uint16_t status,
         settings_set_animation_config(data[0]);
     }
     else {
-        status = STATUS_PAR_ERR; 
+        status = STATUS_PAR_ERR;
     }
     return data_frame_make(cmd, status, 0, NULL);
 }
@@ -112,6 +112,21 @@ data_frame_tx_t* cmd_processor_set_animation_mode(uint16_t cmd, uint16_t status,
 data_frame_tx_t* cmd_processor_get_animation_mode(uint16_t cmd, uint16_t status, uint16_t length, uint8_t *data) {
     uint8_t animation_mode = settings_get_animation_config();
     return data_frame_make(cmd, STATUS_DEVICE_SUCCESS, 1, (uint8_t *)(&animation_mode));
+}
+
+data_frame_tx_t* cmd_processor_set_usbcdc_log_mode(uint16_t cmd, uint16_t status, uint16_t length, uint8_t *data) {
+    if (length == 1) {
+        settings_set_usbcdc_log_config(data[0]);
+    }
+    else {
+        status = STATUS_PAR_ERR;
+    }
+    return data_frame_make(cmd, status, 0, NULL);
+}
+
+data_frame_tx_t* cmd_processor_get_usbcdc_log_mode(uint16_t cmd, uint16_t status, uint16_t length, uint8_t *data) {
+    uint8_t usbcdc_log_mode = settings_get_usbcdc_log_config();
+    return data_frame_make(cmd, STATUS_DEVICE_SUCCESS, 1, (uint8_t *)(&usbcdc_log_mode));
 }
 
 #if defined(PROJECT_CHAMELEON_ULTRA)
@@ -585,6 +600,8 @@ static cmd_data_map_t m_data_cmd_map[] = {
     {    DATA_CMD_SET_ANIMATION_MODE,           NULL,                        cmd_processor_set_animation_mode,            NULL                   },
     {    DATA_CMD_GET_ANIMATION_MODE,           NULL,                        cmd_processor_get_animation_mode,            NULL                   },
     {    DATA_CMD_GET_GIT_VERSION,              NULL,                        cmd_processor_get_git_version,               NULL                   },
+    {    DATA_CMD_SET_USBCDC_LOG_MODE,          NULL,                        cmd_processor_set_usbcdc_log_mode,           NULL                   },
+    {    DATA_CMD_GET_USBCDC_LOG_MODE,          NULL,                        cmd_processor_get_usbcdc_log_mode,           NULL                   },
 
 #if defined(PROJECT_CHAMELEON_ULTRA)
 
@@ -645,6 +662,11 @@ void auto_response_data(data_frame_tx_t* resp) {
 	} else {
 		NRF_LOG_ERROR("No connection valid found at response client.");
 	}
+
+	// TODO just a test, need to send NRF_LOG
+//	if (is_usb_log_working() && (get_usb_log_mode() == SettingsUsbCdcLogModeNrfLog)) {
+//		usb_cdc_log_write("Wrote data\r\n", 12);
+//	}
 }
 
 

@@ -28,6 +28,10 @@
 #define DATA_CMD_GET_ACTIVE_SLOT                (1018)
 #define DATA_CMD_GET_SLOT_INFO                  (1019)
 #define DATA_CMD_WIPE_FDS                       (1020)
+#define DATA_CMD_SET_USBCDC_LOG_MODE            (1021)
+#define DATA_CMD_GET_USBCDC_LOG_MODE            (1022)
+
+
 //
 // ******************************************************************
 

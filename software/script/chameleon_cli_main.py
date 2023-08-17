@@ -94,6 +94,11 @@ class ChameleonCLI:
                         'set': new_uint(chameleon_cli_unit.HWSettingsAnimationSet, "Change chameleon animation mode"),
                         'help': 'Manage wake-up and sleep animation mode'
                     },
+                    'usbcdc_log': {
+                        'get': new_uint(chameleon_cli_unit.HWSettingsUsbCdcLogGet, "Get current USB CDC log mode value"),
+                        'set': new_uint(chameleon_cli_unit.HWSettingsUsbCdcLogSet, "Change USB CDC log mode"),
+                        'help': 'Enable extra USC CDC tty with NRF_LOG'
+                    },
                     'store': new_uint(chameleon_cli_unit.HWSettingsStore, "Store current settings to flash"),
                     'reset': new_uint(chameleon_cli_unit.HWSettingsReset, "Reset settings to default values"),
                     'help': "Chameleon settings management"

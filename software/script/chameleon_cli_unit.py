@@ -198,7 +198,7 @@ class HWConnect(BaseCLIUnit):
             if args.port is None: # Chameleon Autodedect if no port is supplied
                 # loop through all ports and find chameleon
                 for port in serial.tools.list_ports.comports():
-                    if port.vid == 0x6868:
+                    if port.vid == 0x6868 and port.pid == 0x8686 and port.location[-1] == '0':
                         args.port = port.device
                         break
                 if args.port is None: # If no chameleon was found, exit
@@ -1053,6 +1053,31 @@ class HWSettingsAnimationSet(DeviceRequiredUnit):
         self.cmd_standard.set_settings_animation(mode)
         print("Animation mode change success. Do not forget to store your settings in flash!")
     
+
+class HWSettingsUsbCdcLogGet(DeviceRequiredUnit):
+    def args_parser(self) -> ArgumentParserNoExit or None:
+        return None
+    def on_exec(self, args: argparse.Namespace):
+        resp: chameleon_com.Response = self.cmd_standard.get_settings_usbcdc_log()
+        if resp.data[0] == 0:
+            print("No USB CDC log")
+        elif resp.data[0] == 1:
+            print("NRF_LOG on extra tty")
+        else:
+            print("Unknown setting value, something failed.")
+
+
+class HWSettingsUsbCdcLogSet(DeviceRequiredUnit):
+    def args_parser(self) -> ArgumentParserNoExit or None:
+        parser = ArgumentParserNoExit()
+        parser.add_argument('-m', '--mode', type=int, required=True, help="0 is none (default), 1 is NRF_LOG on extra tty", choices=[0, 1])
+        return parser
+
+    def on_exec(self, args: argparse.Namespace):
+        mode = args.mode
+        self.cmd_standard.set_settings_usbcdc_log(mode)
+        print("USB CDC log mode change success. Do not forget to store your settings in flash and to reboot Chameleon!")
+
 
 class HWSettingsStore(DeviceRequiredUnit):
     def args_parser(self) -> ArgumentParserNoExit or None:

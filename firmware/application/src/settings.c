@@ -31,6 +31,7 @@ void settings_init_config(void)
 {
     config.version = SETTINGS_CURRENT_VERSION;
     config.animation_config = SettingsAnimationModeFull;
+    config.usbcdc_log_config = SettingsUsbCdcLogModeNone;
 }
 
 void settings_migrate(void)
@@ -40,20 +41,23 @@ void settings_migrate(void)
             NRF_LOG_ERROR("Unexpected configuration version detected!");
             settings_init_config();
             break;
+        case 1:
+            config.usbcdc_log_config = SettingsUsbCdcLogModeNone;
         /*
          * When needed migrations can be implemented like this:
          *
          * case 1:
-         *   config->new_field = some_default_value;
+         *   config.new_field = some_default_value;
          * case 2:
-         *   config->another_new_field = some_default_value;
+         *   config.another_new_field = some_default_value;
          * case 3:
-         *   config->another_new_field = some_default_value;
-         *   break;
+         *   config.another_new_field = some_default_value;
          *
          * Note that the `break` statement should only be used on the last migration step, all the previous steps must fall
          * through to the next case.
          */
+            config.version = SETTINGS_CURRENT_VERSION;
+            break;
         default:
             NRF_LOG_ERROR("Unsupported configuration migration attempted! (%d -> %d)", config.version, SETTINGS_CURRENT_VERSION);
             break;
@@ -114,4 +118,14 @@ uint8_t settings_get_animation_config()
 void settings_set_animation_config(uint8_t value)
 {
     config.animation_config = value;
+}
+
+uint8_t settings_get_usbcdc_log_config()
+{
+    return config.usbcdc_log_config;
+}
+
+void settings_set_usbcdc_log_config(uint8_t value)
+{
+    config.usbcdc_log_config = value;
 }

@@ -21,6 +21,7 @@
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
+#include "nrf_log_backend_usbcdc.h"
 NRF_LOG_MODULE_REGISTER();
 
 #include "app_cmd.h"
@@ -84,6 +85,8 @@ static void log_init(void) {
     APP_ERROR_CHECK(err_code);
 
     NRF_LOG_DEFAULT_BACKENDS_INIT();
+    // Add our own backend
+    NRF_LOG_BACKEND_USBCDC_INIT();
 }
 
 /**@brief Function for initializing power management.
@@ -479,7 +482,6 @@ static void button_press_process(void) {
     }
 }
 
-extern bool g_usb_port_opened;
 static void blink_usb_led_status(void) {
     uint8_t slot = tag_emulation_get_slot();
     uint8_t color = get_color_by_slot(slot);
@@ -497,7 +499,7 @@ static void blink_usb_led_status(void) {
         // The light effect is enabled and can be displayed
         if (is_rgb_marquee_enable()) {
             is_working = true;
-            if (g_usb_port_opened) {
+            if (is_usb_working()) {
                 ledblink1(color, dir);
             } else {
                 ledblink6();
@@ -529,12 +531,12 @@ int main(void) {
     sleep_timer_init();       // Soft timer initialization for hibernation
     rng_drv_and_srand_init(); // Random number generator initialization
     power_management_init();  // Power management initialization
+    settings_load_config();   // Load settings from flash (before being used by usb_cdc_init)
     usb_cdc_init();           // USB cdc emulation initialization
     ble_slave_init();         // Bluetooth protocol stack initialization
     tag_emulation_init();     // Analog card initialization
     rgb_marquee_init();       // Light effect initialization
 
-    settings_load_config();   // Load settings from flash
 
     // cmd callback register
     on_data_frame_complete(on_data_frame_received);

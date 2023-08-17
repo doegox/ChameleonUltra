@@ -320,3 +320,17 @@ Contrary to RTT that needs to be activated by a JTAG probe, UART logs are immedi
 Limitations:
 * SWO pin is shared with... SWO so when e.g. reflashing the device, garbage may appear on the monitoring terminal.
 * SWO pin is also shared with the blue channel of the RGB slot LEDs, so faint blue may appear briefly when logs are sent and LED might not work properly when supposed to be blue.
+
+## Using Secondary USB CDC to monitor NRF_LOG
+
+This method does not require any additional hardware.
+It needs to be activated with
+* `hw settings usbcdc_log set -m 1`
+* `hw settings update`
+* Then reboot (unplug, wait for it to turn off, plug)
+
+Now a second tty node will appear.
+The new [79-chameleon-ultra.rules](resource/driver/79-chameleon-ultra.rules) makes things easier by creating `/dev/ultra` and `/dev/ultra_log` symlinks.
+Usage: e.g. `screen /dev/ultra_log`.
+
+**WIP, FIXME** currently the chameleon will freeze from time to time when logs are monitored...

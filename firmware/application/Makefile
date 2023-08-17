@@ -11,6 +11,7 @@ SRC_FILES += \
   $(PROJ_DIR)/app_main.c \
   $(PROJ_DIR)/app_cmd.c \
   $(PROJ_DIR)/ble_main.c \
+  $(PROJ_DIR)/nrf_log_backend_usbcdc.c \
   $(PROJ_DIR)/rfid_main.c \
   $(PROJ_DIR)/settings.c \
   $(PROJ_DIR)/usb_main.c \
@@ -38,6 +39,7 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/mdk/gcc_startup_nrf52840.S \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_rtt.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_serial.c \
+  $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_uart.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_default_backends.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_frontend.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_str_formatter.c \
@@ -80,6 +82,7 @@ SRC_FILES += \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_rng.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_spi.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_ppi.c \
+  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_uart.c \
   $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_saadc.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_clock.c \
@@ -113,6 +116,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh_ble.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh_soc.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uarte.c \
 
 
 # Include folders common to all targets
@@ -294,8 +298,7 @@ endif
 ifeq (${NRF_LOG_UART_ON_SWO_ENABLED}, 1)
 SRC_FILES += \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_uart.c \
-  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_uart.c \
-  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uarte.c
+  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_uart.c
 
   CFLAGS += -DNRFX_UARTE_ENABLED=1 -DNRFX_UARTE0_ENABLED=1
   CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=1
